@@ -1,4 +1,4 @@
-# 🕸️ Super Sonic Swing
+# Super Sonic Swing
 
 **Super Sonic Swing** is a fast-paced, physics-based 2D grappling game built entirely with **HTML5 Canvas** and **Matter.js**.  
 The objective is to build enough momentum to break the **sound barrier** and cross the finish line at **supersonic speeds**.
@@ -7,14 +7,13 @@ The objective is to build enough momentum to break the **sound barrier** and cro
 
 # 📑 Table of Contents
 
-- How to Play
-- Features
-- Core Gameplay Flow
-- Game Mechanics & Physics Equations
-- Setup & Installation
-- Tech Stack
-- License & Copyright
-
+- [How to Play](#-how-to-play)
+- [Features](#-features)
+- [Core Gameplay Flow](#-core-gameplay-flow)
+- [Game Mechanics & Physics Equations](#-game-mechanics--physics-equations)
+- [Setup & Installation](#-setup--installation)
+- [Tech Stack](#-tech-stack)
+- [License & Copyright](#-license--copyright)
 ---
 
 # 🎮 How to Play
