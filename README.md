@@ -1,6 +1,8 @@
 # Super Sonic Swing 🕸️
 
-![Gameplay Preview](preview.gif)
+<p align="center">
+  <img src="preview.gif" width="700">
+</p>
 
 **Super Sonic Swing** is a fast-paced physics-based 2D grappling game built with **HTML5 Canvas** and **Matter.js**.
 
@@ -11,10 +13,10 @@ The goal is simple: build enough momentum to **break the sound barrier** and cro
 ## Contents
 
 - [How to Play](#how-to-play)
-- [Features](#Features-✨)
+- [Features](#features)
 - [Core Gameplay Flow](#core-gameplay-flow)
-- [Game Mechanics & Physics](#Game-Mechanics-Physics)
-- [Setup & Installation](#setup--installation)
+- [Game Mechanics and Physics](#game-mechanics-and-physics)
+- [Setup and Installation](#setup-and-installation)
 - [Tech Stack](#tech-stack)
 - [License](#license)
 
@@ -115,9 +117,11 @@ graph TD
 
 ---
 
-# Game Mechanics Physics ⚙️
+# Game Mechanics and Physics ⚙️
 
 The game builds additional physics mechanics on top of the **Matter.js rigid body engine**.
+
+---
 
 ## 1. Grapple Constraint
 
@@ -134,23 +138,25 @@ This force pulls the player toward the anchor point and produces the swinging mo
 
 ---
 
-## 2. The "Yank" (Attach Boost)
+## 2. The Yank (Attach Boost)
 
-When a grapple successfully attaches, velocity receives a multiplier boost.
+When a grapple successfully attaches, the player's velocity receives a multiplier boost.
 
 `v_new = v_current × λ`
 
 where `λ = 1.1`.
 
+Chaining grapples increases speed exponentially.
+
 ---
 
-## 3. The "Fling" (Release Boost)
+## 3. The Fling (Release Boost)
 
-First compute normalized velocity:
+First compute the normalized velocity direction:
 
 `v̂ = v_current / |v_current|`
 
-Then apply release boost:
+Then apply the release boost:
 
 `v_new = v_current + (v̂ × F_fling)`
 
@@ -160,11 +166,11 @@ where `F_fling = 15`.
 
 ## 4. Supersonic Drag (Air Wall)
 
-If player speed exceeds required speed:
+If the player exceeds the required speed:
 
 `|v| ≥ V_req`
 
-Velocity update:
+Velocity is reduced each physics frame:
 
 `v_new = v_current × μ_drag`
 
@@ -174,23 +180,29 @@ where
 
 Physics timestep:
 
-`Δt = 16.6 ms`
+`Δt = 16.6 ms`.
 
 ---
 
 ## 5. Dynamic Difficulty Scaling
 
+Required speed increases with level:
+
 `V_req(L) = V_base + (L − 1) × 5`
 
 where
 
-`V_base = 45`
+`V_base = 45`.
 
 ---
 
 ## 6. Dynamic Camera Zoom
 
+First compute velocity ratio:
+
 `ratio = min(|v| / V_base , 2.5)`
+
+Target zoom:
 
 `Z_target = max(1 − (ratio × 0.3), 0.25) × Scale_base`
 
@@ -200,36 +212,45 @@ Smooth interpolation:
 
 ---
 
-# Setup & Installation 🛠️
+# Setup and Installation 🛠️
 
-1. Clone or download the repository  
+The game is contained in a **single HTML file**.
+
+Steps:
+
+1. Clone or download the repository
 2. Open `index.html` in a modern browser
 
 Recommended local server:
 
 `python -m http.server`
 
-or **VS Code Live Server**
+or **VS Code Live Server**.
 
 ---
 
 # Tech Stack 🏗️
 
-**HTML / CSS**
+### HTML / CSS
 
-UI layout, styling, animations
+UI layout, styling, overlay animations.
 
-**JavaScript (ES6)**
+### JavaScript (ES6)
 
-Game logic and procedural generation
+Game logic, procedural generation, rendering loop.
 
-**Canvas API**
+### Canvas API
 
-High-performance rendering
+High-performance rendering with separate environment and particle layers.
 
-**Matter.js**
+### Matter.js
 
-2D rigid body physics engine
+Rigid body physics engine handling:
+
+- collision detection
+- constraints
+- gravity
+- physics simulation
 
 ---
 
@@ -238,3 +259,5 @@ High-performance rendering
 © 2026 **Shounak Das**
 
 All Rights Reserved.
+
+This software and its documentation may **not be copied, modified, or distributed** without explicit permission.
