@@ -1,2 +1,30 @@
-# Super-Sonic-Swing
-Simple Game
+🕸️ Super Sonic SwingSuper Sonic Swing is a fast-paced, physics-based 2D grappling game built entirely with HTML5 Canvas and Matter.js. The objective is to build enough momentum to break the "sound barrier" and cross the finish line at supersonic speeds.📑 Table of ContentsHow to PlayFeaturesCore Gameplay FlowGame Mechanics & Physics EquationsSetup & InstallationTech StackLicense & Copyright🎮 How to PlayObjective: Cross the finish line at the far right of the level.The Catch: You must be traveling at or above the "Required Speed" when crossing the line, or you will be forcefully bounced backward to try again.Controls:Mouse/Touch Down: Attach a grapple hook to the nearest anchor point.Mouse/Touch Up: Release the grapple line to fling yourself forward.Themes: Choose between 4 distinct premium color palettes (Synthwave, Cyberpunk, Minimal Dark, Minimal Light) via the in-game UI.✨ FeaturesProcedural Level Generation: Levels extend and become more difficult infinitely.Custom Physics: Fine-tuned gravity, air friction, and restitution parameters.Dynamic Visuals: Speed-based camera zoom, dynamic motion trails, screen shake, and Mach cone shockwaves when breaking the sound barrier.Environmental Hazards/Aids: Bouncy pads, Anti-gravity zones, and Wind tunnels.🔄 Core Gameplay FlowThe following diagram illustrates the input handling and physics resolution loop that drives the player's progression through a level:graph TD
+    Start([Start / Reset Level]) --> Wait[Airborne / Freefall]
+    
+    Wait -->|Input: Mouse Down| CheckHook[Find Nearest Anchor Hook]
+    
+    CheckHook --> HookValid{Hook Found?}
+    HookValid -->|Yes| Yank[Create Spring Constraint <br/> Apply 'Yank' Velocity Multiplier]
+    HookValid -->|No| Wait
+    
+    Yank --> Swing[Swinging Physics Active]
+    
+    Swing -->|Input: Mouse Up| Fling[Destroy Constraint <br/> Inject 'Fling' Directional Force]
+    Fling --> Wait
+    
+    Wait --> PhysicsCheck{Engine Collision / Bounds Check}
+    
+    PhysicsCheck -->|Hits Bouncy Pad| Bounce[Reflect Velocity based on Pad Angle]
+    Bounce --> Wait
+    
+    PhysicsCheck -->|Falls below DEATH_Y| Die[Level Reset]
+    Die --> Start
+    
+    PhysicsCheck -->|Hits Finish Line Sensor| FinishCheck{Current Speed >=<br/> Required Speed?}
+    
+    FinishCheck -->|Yes| Win[Victory! <br/> Procedurally Generate Next Level]
+    Win --> Start
+    
+    FinishCheck -->|No| Fail[Too Slow! <br/> Apply massive backward force]
+    Fail --> Wait
+⚙️ Game Mechanics & Physics EquationsSuper Sonic Swing relies heavily on custom physics impulses applied on top of the Matter.js rigid-body physics engine. Here is how the core mechanics are calculated:1. The Grapple ConstraintWhen the user clicks, the game identifies the nearest hook and creates a Spring Constraint between the player ($P$) and the hook ($H$). The constraint utilizes Hooke's Law internally via Matter.js to pull the player toward the anchor, with a stiffness parameter ($k = 0.2$) and damping ($c = 0.05$).2. The "Yank" (Attach Boost)To make the gameplay feel fast and aggressive, simply swinging isn't enough. When a player successfully grapples a hook, an immediate multiplier is applied to their current velocity $\vec{v}$.Let $\lambda$ be the swingBoostMult (1.1). If the player is already moving ($|\vec{v}| > 1$), their new velocity upon attachment is:$$\vec{v}_{new} = \vec{v}_{current} \times \lambda$$This ensures that chaining swings together exponentially increases your speed.3. The "Fling" (Release Boost)When the player releases the mouse/screen, the constraint is destroyed. To simulate the active effort of the player "throwing" themselves out of the swing, a flat velocity vector is injected in the direction of their current trajectory.Let $F_{fling}$ be the releaseBoost parameter (15). Let $\hat{v}$ be the normalized velocity vector (direction of travel):$$\hat{v} = \frac{\vec{v}_{current}}{|\vec{v}_{current}|}$$$$\vec{v}_{new} = \vec{v}_{current} + (\hat{v} \times F_{fling})$$4. Supersonic Drag (The Air Wall)To prevent the player's speed from reaching infinity and to make maintaining supersonic speeds a challenge, a custom friction coefficient is applied only when the player is moving faster than the level's required speed ($V_{req}$).If $|\vec{v}| \geq V_{req}$, an artificial drag multiplier ($\mu_{drag} = 0.998$) is applied every physics frame ($16.6$ms):$$\vec{v}_{new} = \vec{v}_{current} \times \mu_{drag}$$5. Dynamic Difficulty ScalingAs the player progresses, the level length and the speed required to beat the level ($V_{req}$) scale linearly. For any given level $L$:$$V_{req}(L) = V_{base} + (L - 1) \times 5$$(Where $V_{base} = 45$)6. Dynamic Camera ZoomTo keep the player in view when traveling at extreme speeds, the camera dynamically zooms out. The zoom scale $Z$ is calculated inversely to the player's velocity ratio against the required speed.$$Ratio = \min\left( \frac{|\vec{v}|}{V_{base}}, 2.5 \right)$$$$Z_{target} = \max(1.0 - (Ratio \times 0.3), 0.25) \times Scale_{base}$$The camera's actual zoom is then linearly interpolated (LERP) toward $Z_{target}$ by a factor of $0.02$ per frame for a smooth cinematic effect.🛠️ Setup & InstallationThis game is self-contained in a single HTML file. No build steps or bundlers are required.Clone or download this repository.Open index.html in any modern web browser.Note: While it runs locally via the file:// protocol, running it through a local server (like VSCode Live Server or python -m http.server) is recommended for the best performance.🏗️ Tech StackHTML/CSS: UI rendering, premium styling, and overlay animations.JavaScript (ES6): Game logic, procedural generation, and render loop.Canvas API: High-performance dual-layer rendering (Background/Environment layer + Foreground Player/Particle layer).Matter.js: 2D rigid body physics engine handling collisions, constraints, and gravity.📄 License & Copyright© 2026 Shounak Das. All Rights Reserved. This software and its associated documentation may not be copied, modified, or distributed without express permission.
