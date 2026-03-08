@@ -1,4 +1,4 @@
-# Super Sonic Swing 🕸️
+# Super Sonic Swing
 
 <p align="center">
   <img src="preview.gif" width="700">
